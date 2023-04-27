@@ -2,6 +2,8 @@
 # Setup kaf cli
 - hosts: kafka_nodes
   become: false
+  vars_files:
+    - ../vars/kafka_nodes
   
   tasks:
     - name: Create directory for kafka application logs

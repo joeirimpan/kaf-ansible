@@ -2,6 +2,8 @@
 # Setup kafka, zookeeper
 - hosts: kafka_nodes
   become: true
+  vars_files:
+    - ../vars/kafka_nodes
 
   tasks:
     - name: Create kafka group

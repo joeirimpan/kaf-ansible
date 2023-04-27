@@ -1,7 +1,8 @@
 /*
 Usage:
 > go build -o byok main.go
-> ./byok --in config-in.yaml --addr 0.0.0.0 --addrs="0.0.0.0,0.0.0.1,0.0.0.2" --out config-out.yaml
+> ./byok --in config-in.yaml --addrs="0.0.0.0,0.0.0.1,0.0.0.2" --out config-out
+Generate 3 files with broker address configs as addrs[0], addrs[1], addrs[2]
 */
 package main
 
@@ -10,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	goyaml "github.com/goccy/go-yaml"
@@ -46,12 +48,13 @@ func replaceArrayAt(f *ast.File, path string, values []string) {
 }
 
 // generate config after formatting server address and other broker addresses into ansible yaml configuration
-func generateConfig(b []byte, addr string, addrs []string) []byte {
+func generateConfig(b []byte, brokerID int, addr string, addrs []string) []byte {
 	f, err := parser.ParseBytes(b, parser.ParseComments)
 	if err != nil {
 		log.Fatalf("error unmarshalling configuration: %v", err)
 	}
 
+	replaceStringAt(f, "$.kafka_broker_id", strconv.Itoa(brokerID))
 	replaceStringAt(f, "$.kafka_advertised_listeners[0]", fmt.Sprintf("INTERNAL://%s:9092", addr))
 	replaceStringAt(f, "$.kafka_advertised_listeners[1]", fmt.Sprintf("BROKER://%s:9091", addr))
 
@@ -92,13 +95,12 @@ func main() {
 	}
 
 	var (
-		inFile, outFile, addr string
-		addrs                 []string
+		inFile, outFile string
+		addrs           []string
 	)
 	flagSet.StringVar(&inFile, "in", "test.yaml", "Ansible kafka nodes configurations input")
-	flagSet.StringVar(&addr, "addr", "", "Current broker addresses")
 	flagSet.StringSliceVar(&addrs, "addrs", []string{}, "Broker addresses")
-	flagSet.StringVar(&outFile, "out", "", "Ansible kafka nodes configuration output")
+	flagSet.StringVar(&outFile, "out", "", "Ansible kafka nodes configuration output files")
 
 	err := flagSet.Parse(os.Args[1:])
 	if err != nil {
@@ -111,10 +113,6 @@ func main() {
 	}
 
 	// Validate flags
-	if addr == "" {
-		log.Fatalf("--addr cannot be left empty")
-	}
-
 	if len(addrs) == 0 {
 		log.Fatalf("--addrs cannot be left empty")
 	}
@@ -123,9 +121,15 @@ func main() {
 		log.Fatalf("--out cannot be left empty")
 	}
 
+	var out []byte
 	// Generate and write back to file.
-	out := generateConfig(b, addr, addrs)
-	if err := os.WriteFile(outFile, out, 0644); err != nil {
-		log.Fatalf("error writing to %s: %v", outFile, err)
+	for i := 0; i < len(addrs); i++ {
+		out = generateConfig(b, i+1, addrs[i], addrs)
+		if err := os.WriteFile(fmt.Sprintf("%s.%d", outFile, i), out, 0644); err != nil {
+			log.Fatalf("error writing to %s: %v", outFile, err)
+		}
+
+		// reset
+		out = out[:0]
 	}
 }

@@ -43,8 +43,9 @@ kaf topic create test
 
 ```bash
 go build -o byok main.go
-./byok --in config-in.yaml --addr 0.0.0.0 --addrs="0.0.0.0,0.0.0.1,0.0.0.2" --out config-out.yaml
+./byok --in config-in.yaml --addrs="0.0.0.0,0.0.0.1,0.0.0.2" --out config-out
 ```
+Above command generates 3 config files with different broker ids, addresses. Change `var_files` in `tasks/main.yaml` to use appropriate config file for setting up the nodes. 
 
 ## Credits
 
