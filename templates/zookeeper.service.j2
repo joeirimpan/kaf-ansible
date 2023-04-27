@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache Kafka - ZooKeeper
+After=network.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart={{ kafka_dir }}/bin/zookeeper-server-start.sh /etc/kafka/zookeeper.properties
+LimitNOFILE=100000
+TimeoutStopSec=180
+Restart=no
+Environment="KAFKA_HEAP_OPTS={{ zookeeper_heap_opts }}"
+Environment="KAFKA_OPTS={{ zookeeper_opts }}"
+
+[Install]
+WantedBy=multi-user.target

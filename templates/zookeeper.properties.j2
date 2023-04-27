@@ -1,0 +1,14 @@
+admin.enableServer={{ kafka_zookeeper_admin_enableserver }}
+authProvider.sasl=org.apache.zookeeper.server.auth.SASLAuthenticationProvider
+autopurge.purgeInterval={{ kafka_zookeeper_autopurge_interval }}
+autopurge.snapRetainCount={{ kafka_zookeeper_autopurge_snap_retain_count }}
+clientPort={{ kafka_zookeeper_client_port }}
+dataDir={{ kafka_zookeeper_data_dir }}
+initLimit={{ kafka_zookeeper_init_limit }}
+maxClientCnxns={{ kafka_zookeeper_max_client_cons }}
+
+{% for server in kafka_zookeeper_servers %}
+server.{{ loop.index }}={{ server }}
+{% endfor %}
+
+syncLimit={{ kafka_zookeeper_synclimit }}

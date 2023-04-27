@@ -1,0 +1,17 @@
+Server {
+    org.apache.zookeeper.server.auth.DigestLoginModule required
+    user_{{jaas.admin.principal}}="{{jaas.admin.password}}"
+    user_{{jaas.kafka_broker.principal}}="{{jaas.kafka_broker.password}}";
+};
+
+QuorumServer {
+    org.apache.zookeeper.server.auth.DigestLoginModule required
+    user_{{jaas.admin.principal}}="{{jaas.admin.password}}"
+    user_{{jaas.kafka_broker.principal}}="{{jaas.kafka_broker.password}}";
+};
+
+QuorumLearner {
+    org.apache.zookeeper.server.auth.DigestLoginModule required
+    username="{{ jaas.admin.principal }}"
+    password="{{ jaas.admin.password }}";
+};

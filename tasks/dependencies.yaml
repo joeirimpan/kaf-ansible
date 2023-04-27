@@ -1,0 +1,10 @@
+---
+# Install dependencies
+- hosts: kafka_nodes
+  become: yes
+  tasks: 
+   - name: install java
+     apt:
+       name: openjdk-11-jre-headless
+       state: present
+     when: ansible_os_family == "Debian"

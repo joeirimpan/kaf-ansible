@@ -1,0 +1,57 @@
+# sets a unique identifier for each broker in a Kafka cluster.
+broker.id={{ kafka_broker_id }}
+background.threads={{ kafka_background_threads }}
+
+# the name of the listener used for communication between Kafka brokers in a multi-broker cluster
+inter.broker.listener.name=BROKER
+# time to delay the initial rebalance of a consumer group after a new consumer joins or an existing consumer is removed.
+group.initial.rebalance.delay.ms={{ kafka_group_initial_rebalance_delay_ms }}
+
+# JAAS (Java Authentication and Authorization Service) configuration for SASL (Simple Authentication and Security Layer) authentication using the PLAIN mechanism for a listener named "internal" that uses plaintext communication.
+listener.name.internal.plain.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+    username="{{jaas.admin.principal}}" \
+    password="{{jaas.admin.password}}" \
+    user_{{jaas.admin.principal}}="{{jaas.admin.password}}";
+listener.name.internal.sasl.enabled.mechanisms=PLAIN
+listener.security.protocol.map=INTERNAL:SASL_PLAINTEXT,BROKER:PLAINTEXT
+listeners={{ kafka_listeners | join(",")}}
+advertised.listeners={{ kafka_advertised_listeners | join(",")}}
+
+log.dirs={{ kafka_data_log_dirs }}
+log.retention.check.interval.ms={{ kafka_log_retention_check_interval_ms }}
+log.retention.hours={{ kafka_log_retention_hours }}
+log.segment.bytes={{ kafka_log_segment_bytes }}
+log.cleaner.threads={{ kafka_log_cleaner_threads }}
+log.cleaner.backoff.ms={{ kafka_log_cleaner_backoff_ms }}
+
+# The maximum size (in bytes) of a message allowed through Kafka brokers.
+message.max.bytes={{ kafka_socket_request_max_bytes }}
+
+num.io.threads={{ kafka_num_io_threads }}
+num.replica.fetchers={{ kafka_num_replica_fetchers }}
+num.network.threads={{ kafka_num_network_threads }}
+num.partitions={{ kafka_num_partitions }}
+num.recovery.threads.per.data.dir={{ kafka_num_recovery_threads_per_data_dir }}
+
+offsets.retention.minutes={{ kafka_offset_retention_minutes }}
+offsets.topic.replication.factor={{ kafka_offsets_topic_replication_factor }}
+# sets the maximum size of data that a broker can replicate to followers in a single request.
+replica.fetch.max.bytes={{ kafka_socket_request_max_bytes }}
+sasl.enabled.mechanisms={{ kafka_sasl_enabled_mechanisms }}
+
+socket.receive.buffer.bytes={{ kafka_socket_receive_buffer_bytes }}
+# sets the maximum size of a request that can be sent over the network between brokers and clients.
+socket.request.max.bytes={{ kafka_socket_request_max_bytes }}
+socket.send.buffer.bytes={{ kafka_socket_send_buffer_bytes }}
+replica.socket.receive.buffer.bytes={{ kafka_replica_socket_receive_buffer_bytes }}
+
+transaction.state.log.min.isr={{ kafka_transaction_state_log_min_isr }}
+transaction.state.log.replication.factor={{ kafka_transaction_state_log_replication_factor }}
+
+# specifies the ZooKeeper connection string, allowing Kafka to connect with and coordinate distributed applications.
+zookeeper.connect={{ kafka_zookeeper_connect }}
+zookeeper.connection.timeout.ms={{ kafka_zookeeper_connection_timeout_ms }}
+zookeeper.set.acl=true
+
+delete.topic.enable={{ kafka_delete_topic_enable }}
+auto.create.topics.enable={{ kafka_auto_create_topics_enable }}

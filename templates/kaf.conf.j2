@@ -1,0 +1,21 @@
+current-cluster: kafka-nodes
+clusteroverride: ""
+clusters:
+- name: kafka-nodes
+  version: ""
+  brokers:
+  {% for server in kaf_kakfa_servers %}
+  - {{ server }}
+  {% endfor %}
+
+  SASL:
+    mechanism: ""
+    username: {{jaas.admin.principal}}
+    password: {{jaas.admin.password}}
+    clientID: ""
+    clientSecret: ""
+    tokenURL: ""
+    token: ""
+  TLS: null
+  security-protocol: ""
+  schema-registry-url: ""

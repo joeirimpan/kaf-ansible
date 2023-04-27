@@ -1,0 +1,35 @@
+---
+# Setup kaf cli
+- hosts: kafka_nodes
+  become: false
+  
+  tasks:
+    - name: Create directory for kafka application logs
+      file:
+        path: '{{ansible_env.HOME}}/.kaf'
+        state: directory
+        mode: 0755
+      tags:
+        - kaf_dirs
+
+    - name: Template configuration file to kaf
+      template:
+        src: ../templates/kaf.conf.j2
+        dest: "{{ansible_env.HOME}}/.kaf/config"
+        mode: 0644
+      tags:
+        - kaf_config
+    
+    - name: Install kaf binary
+      shell: curl https://raw.githubusercontent.com/birdayz/kaf/master/godownloader.sh | BINDIR={{ansible_env.HOME}}/bin bash
+      tags:
+        - kaf_install
+    
+    - name: Symlink kaf to "/usr/bin/kaf"
+      become: true
+      file:
+        src: '{{ansible_env.HOME}}/bin/kaf'
+        dest: '/usr/bin/kaf'
+        state: link
+      tags:
+        - kaf_install

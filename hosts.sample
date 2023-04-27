@@ -1,0 +1,4 @@
+[kafka_nodes]
+node-1
+
+#localhost ansible_connection=local

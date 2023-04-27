@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache Kafka - broker
+After=network.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart={{ kafka_dir }}/bin/kafka-server-start.sh /etc/kafka/server.properties
+LimitNOFILE=100000
+TimeoutStopSec=180
+Restart=no
+Environment="KAFKA_HEAP_OPTS={{ kafka_heap_opts }}"
+Environment="KAFKA_OPTS={{ kakfa_opts }}"
+
+[Install]
+WantedBy=multi-user.target
