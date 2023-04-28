@@ -8,7 +8,6 @@ Before running this script, make sure you have the following prerequisites:
 
 - Ansible, python installed on your local, server machine
 - SSH access to the target servers
-- Kafka and Zookeeper binary files downloaded on your local machine
 
 ## Usage
 
