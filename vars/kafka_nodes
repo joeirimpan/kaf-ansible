@@ -136,6 +136,18 @@ kafka_zookeeper_max_client_cons: 0
 
 kafka_zookeeper_admin_enableserver: false
 
+kafka_zookeeper_quorom_auth_enablesasl: true
+
+kafka_zookeeper_quorom_auth_learner_requiresasl: true
+
+kafka_zookeeper_quorom_auth_server_requiresasl: true
+
+kafka_zookeeper_quorom_auth_learner_logincontext: QuorumLearner
+
+kafka_zookeeper_quorom_auth_server_logincontext: QuorumServer
+
+kafka_zookeeper_quorom_auth_cnxn_threads_size: 20
+
 # Enables delete topic. Delete topic through the admin tool will have no
 # effect if this config is turned off
 kafka_delete_topic_enable: true

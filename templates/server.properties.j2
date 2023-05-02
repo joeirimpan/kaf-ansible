@@ -8,6 +8,8 @@ inter.broker.listener.name=BROKER
 group.initial.rebalance.delay.ms={{ kafka_group_initial_rebalance_delay_ms }}
 
 # JAAS (Java Authentication and Authorization Service) configuration for SASL (Simple Authentication and Security Layer) authentication using the PLAIN mechanism for a listener named "internal" that uses plaintext communication.
+# username/password is used for inter-broker communication.
+# user_userName section is used for all users that connect to the brokers.
 listener.name.internal.plain.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
     username="{{jaas.admin.principal}}" \
     password="{{jaas.admin.password}}" \

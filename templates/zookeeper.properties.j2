@@ -12,3 +12,10 @@ server.{{ loop.index }}={{ server }}
 {% endfor %}
 
 syncLimit={{ kafka_zookeeper_synclimit }}
+
+quorum.auth.enableSasl={{ kafka_zookeeper_quorom_auth_enablesasl }}
+quorum.auth.learnerRequireSasl={{ kafka_zookeeper_quorom_auth_learner_requiresasl }}
+quorum.auth.serverRequireSasl={{ kafka_zookeeper_quorom_auth_server_requiresasl }}
+quorum.auth.learner.loginContext={{ kafka_zookeeper_quorom_auth_learner_logincontext }}
+quorum.auth.server.loginContext={{ kafka_zookeeper_quorom_auth_server_logincontext }}
+quorum.cnxn.threads.size={{ kafka_zookeeper_quorom_auth_cnxn_threads_size }}
