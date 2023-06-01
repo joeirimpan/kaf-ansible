@@ -55,18 +55,23 @@ func generateConfig(b []byte, brokerID int, addr string, addrs []string) []byte 
 	}
 
 	replaceStringAt(f, "$.kafka_broker_id", strconv.Itoa(brokerID))
-	replaceStringAt(f, "$.kafka_advertised_listeners[0]", fmt.Sprintf("INTERNAL://%s:9092", addr))
-	replaceStringAt(f, "$.kafka_advertised_listeners[1]", fmt.Sprintf("BROKER://%s:9091", addr))
+	replaceArrayAt(f, "$.kafka_advertised_listeners", []string{
+		fmt.Sprintf("INTERNAL://%s:9092", addr),
+		fmt.Sprintf("BROKER://%s:9091", addr),
+	})
 
-	zookeeperAddrs := make([]string, len(addrs))
-	copy(zookeeperAddrs, addrs)
-	for i := 0; i < len(zookeeperAddrs); i++ {
-		zookeeperAddrs[i] += ":2888:3888"
+	zkFollowers := make([]string, len(addrs))
+	zkClients := make([]string, len(addrs))
+	copy(zkFollowers, addrs)
+	copy(zkClients, addrs)
+	for i := 0; i < len(zkFollowers); i++ {
+		zkFollowers[i] += ":2888:3888"
+		zkClients[i] += ":2181"
 	}
-	a := strings.Join(zookeeperAddrs, ",")
-	replaceStringAt(f, "$.kafka_zookeeper_connect", a)
 
-	replaceArrayAt(f, "$.kafka_zookeeper_servers", zookeeperAddrs)
+	replaceStringAt(f, "$.kafka_zookeeper_connect", strings.Join(zkClients, ","))
+
+	replaceArrayAt(f, "$.kafka_zookeeper_servers", zkFollowers)
 
 	kafkaAddrs := make([]string, len(addrs))
 	copy(kafkaAddrs, addrs)
