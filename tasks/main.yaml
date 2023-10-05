@@ -153,6 +153,17 @@
       tags:
         - kafka_config
 
+    - name: Create myid file for zookeeper
+      copy:
+        content: |
+          {{ kafka_broker_id }}
+        dest: "{{ kafka_zookeeper_data_dir }}/myid"
+        group: "{{ kafka_group }}"
+        owner: "{{ kafka_user }}"
+        mode: 0644
+      tags:
+        - kafka_config
+
     - name: Template configuration file to zookeeper_jaas.conf
       template:
         src: ../templates/zookeeper_jaas.conf.j2
